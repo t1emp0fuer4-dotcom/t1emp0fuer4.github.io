@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxo — Física y electrónica interactiva</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='none' stroke='%2322d3ee' stroke-width='2.4' d='M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 2.5-6 5-6'/></svg>">
+
+  <!-- Fuentes (fontsource) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/500.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter/600.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk/500.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk/600.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk/700.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono/400.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono/600.css">
+
+  <!-- Ecuaciones (KaTeX) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Hojas de estilos y scripts del proyecto -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#04070f] text-slate-200 overflow-x-hidden">
+
+  <div class="grid-bg pointer-events-none fixed inset-0 z-0"></div>
+
+  <!-- ============ NAV ============ -->
+  <header id="navBar" class="fixed inset-x-0 top-0 z-40 transition-all duration-300">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
+      <a href="#inicio" class="flex items-center gap-2.5">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 2.5-6 5-6" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="font-display text-lg font-semibold tracking-tight text-white">fluxo</span>
+        <span class="hidden sm:inline font-code text-[10px] text-cyan-300/80 border border-cyan-300/30 rounded-full px-2 py-0.5">FÍSICA · ELECTRÓNICA</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-1 rounded-full bg-white/10 px-1.5 py-1.5 backdrop-blur-lg border border-white/10">
+        <a href="#teorias" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Teorías</a>
+        <a href="#maxwell" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Maxwell</a>
+        <a href="#campo" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Campos</a>
+        <a href="#espectro" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Espectro</a>
+        <a href="#electronica" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Electrónica</a>
+        <a href="#curiosidades" class="rounded-full px-4 py-1.5 text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white transition-colors">Curiosidades</a>
+      </nav>
+      <a href="#maxwell" class="hidden md:inline-flex rounded-full px-5 py-2.5 text-sm font-semibold text-slate-950 bg-gradient-to-b from-cyan-300 to-teal-400 hover:opacity-90 transition">Explorar</a>
+      <button id="menuBtn" aria-label="Abrir menú" class="md:hidden relative z-50 h-10 w-10 rounded-full bg-white/10 backdrop-blur-lg border border-white/10">
+        <svg id="iconMenu" class="absolute inset-0 m-auto h-5 w-5 text-white transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg id="iconX" class="absolute inset-0 m-auto h-5 w-5 text-white -rotate-90 scale-0 opacity-0 transition-all duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="backdrop" class="fixed inset-0 z-40 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 md:hidden"></div>
+  <aside id="drawer" class="fixed right-0 top-0 z-40 h-full w-72 translate-x-full bg-black/90 backdrop-blur-xl border-l border-white/10 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden">
+    <div class="flex h-full flex-col px-6 pt-24">
+      <div class="flex flex-col gap-2">
+        <a href="#teorias" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Teorías</a>
+        <a href="#maxwell" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Maxwell</a>
+        <a href="#campo" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Campos</a>
+        <a href="#espectro" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Espectro</a>
+        <a href="#electronica" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Electrónica</a>
+        <a href="#curiosidades" class="drawer-link rounded-xl px-4 py-3.5 text-base font-medium text-white/80 hover:bg-white/10 hover:text-white">Curiosidades</a>
+      </div>
+      <div class="mt-auto px-1 pb-10">
+        <a href="#maxwell" class="drawer-link block w-full rounded-full px-5 py-3 text-center text-sm font-semibold text-slate-950 bg-gradient-to-b from-cyan-300 to-teal-400">Comenzar a explorar</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ HERO ============ -->
+  <section id="inicio" class="relative h-screen w-full overflow-hidden">
+    <canvas id="heroCanvas" class="absolute inset-0 h-full w-full"></canvas>
+    <div class="pointer-events-none absolute inset-0" style="background:radial-gradient(ellipse at center, transparent 50%, rgba(4,7,15,.85) 100%)"></div>
+
+    <div class="chip glass absolute left-[7%] top-[24%] hidden lg:block rounded-full px-4 py-2 font-code text-xs text-cyan-200/90" style="animation-delay:.2s"><span data-tex="E=mc^2"></span></div>
+    <div class="chip glass absolute right-[9%] top-[30%] hidden lg:block rounded-full px-4 py-2 font-code text-xs text-teal-200/90" style="animation-delay:1.4s"><span data-tex="\nabla\times\mathbf{B}=\mu_0\mathbf{J}"></span></div>
+    <div class="chip glass absolute left-[13%] bottom-[26%] hidden lg:block rounded-full px-4 py-2 font-code text-xs text-sky-200/90" style="animation-delay:2.6s"><span data-tex="V=I\,R"></span></div>
+    <div class="chip glass absolute right-[14%] bottom-[20%] hidden lg:block rounded-full px-4 py-2 font-code text-xs text-amber-200/90" style="animation-delay:3.4s"><span data-tex="\lambda f=c"></span></div>
+
+    <div class="relative z-10 flex h-full flex-col px-5 sm:px-8 lg:px-12">
+      <main class="flex flex-1 flex-col justify-center max-w-3xl pt-16">
+        <p class="font-code text-[11px] sm:text-xs tracking-[0.35em] uppercase text-cyan-300">Explora · Experimenta · Entiende</p>
+        <h1 id="heroTitle" data-text="Las fuerzas invisibles que encienden el mundo" class="font-display mt-4 text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.06] tracking-tight text-white">Las fuerzas invisibles que encienden el mundo</h1>
+        <p class="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-slate-300/90">Campos electromagnéticos, las ecuaciones de Maxwell y los circuitos que hacen posible toda la tecnología moderna — en laboratorios interactivos, no en páginas estáticas.</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#maxwell" class="rounded-full px-6 py-3 text-sm font-semibold text-slate-950 bg-gradient-to-b from-cyan-300 to-teal-400 hover:opacity-90 transition">Entrar al laboratorio</a>
+          <a href="#teorias" class="glass rounded-full px-6 py-3 text-sm font-medium text-white/90 hover:bg-white/10 transition">Ver las teorías</a>
+        </div>
+      </main>
+      <div class="flex flex-col items-center gap-6 pb-8">
+        <div class="hidden sm:flex gap-2">
+          <span class="glass rounded-full px-4 py-2 font-code text-[11px] text-slate-300">c = 299 792 458 m/s</span>
+          <span class="glass rounded-full px-4 py-2 font-code text-[11px] text-slate-300">e⁻ = 1,6×10⁻¹⁹ C</span>
+          <span class="glass rounded-full px-4 py-2 font-code text-[11px] text-slate-300">4 ecuaciones de Maxwell</span>
+        </div>
+        <a href="#teorias" aria-label="Bajar" class="bounce-down text-cyan-300"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <main class="relative z-10">
+
+    <!-- ============ TEORÍAS ============ -->
+    <section id="teorias" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">01 · Fundamentos</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Teorías que explican el universo</h2>
+        <p class="mt-3 max-w-2xl text-slate-400">Seis pilares de la física moderna, cada uno con su ecuación insignia y un dato que te hará mirar el mundo distinto.</p>
+      </div>
+
+      <div class="reveal mt-12 grid gap-6 lg:grid-cols-2 items-stretch">
+        <div class="glass rounded-3xl p-8 flex flex-col justify-center">
+          <h3 class="font-display text-2xl font-semibold text-white">¿Por qué la física es fascinante?</h3>
+          <p class="mt-4 text-slate-400 leading-relaxed">Porque no es una lista de fórmulas: es el manual de instrucciones de la realidad. La misma teoría que explica un rayo de tormenta diseña el chip de tu teléfono. Aquí no memorizas: <span class="text-cyan-300">tocas, mueves y observas</span>.</p>
+          <ul class="mt-6 space-y-3 text-sm text-slate-300">
+            <li class="flex gap-3"><span class="text-cyan-300">⚡</span> Laboratorios interactivos de campos y circuitos</li>
+            <li class="flex gap-3"><span class="text-teal-300">∿</span> Las ecuaciones de Maxwell animadas en vivo</li>
+            <li class="flex gap-3"><span class="text-amber-300">✦</span> Curiosidades que conectan la teoría con tu día a día</li>
+          </ul>
+        </div>
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 min-h-[280px]">
+          <img src="https://image.qwenlm.ai/public_source/08928754-b656-4bac-bef4-9015cbf2389a/197988f64-dcda-4dec-90d6-150f65930515.png" alt="Bobina de Tesla en un laboratorio vintage" class="kenburns absolute inset-0 h-full w-full object-cover">
+          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#04070f] via-[#04070f]/40 to-transparent p-6">
+            <p class="font-code text-xs text-cyan-300">1899 · Colorado Springs</p>
+            <p class="mt-1 text-sm text-slate-300">Tesla convirtió el laboratorio en un instrumento: la física se demuestra, no se declara.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Electromagnetismo</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="\nabla\times\mathbf{E}=-\tfrac{\partial\mathbf{B}}{\partial t}"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">Electricidad y magnetismo son dos caras de una misma fuerza. Sus ondas viajan a la velocidad de la luz… porque la luz <em>es</em> una de ellas.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: tu wifi y un horno microondas usan la misma física.</p>
+        </div>
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-400/10 text-teal-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Mecánica cuántica</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="i\hbar\,\tfrac{\partial\psi}{\partial t}=\hat{H}\psi"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">En lo diminuto, la naturaleza es probabilística: las partículas se comportan como ondas y atraviesan barreras “imposibles”.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: el efecto túnel hace posible tu memoria USB.</p>
+        </div>
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-400/10 text-sky-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M20.3 8A10 10 0 1 1 16 3.7"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Relatividad especial</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="E=mc^2"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">El tiempo se dilata y el espacio se contrae cuando te acercas a <span class="font-code">c</span>. Masa y energía son el mismo idioma.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: sin correcciones relativistas, el GPS erraría por kilómetros.</p>
+        </div>
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-400/10 text-orange-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22c4 0 7-3 7-7 0-5-4-7-4-11-3 2-4 5-4 7-1-1-2-2.5-2-4-2 2-4 5-4 8 0 4 3 7 7 7z"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Termodinámica</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="\Delta S \geq 0"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">La entropía siempre crece: el tiempo tiene flecha. Gobierna motores, refrigeradores y el destino de las estrellas.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: tu taza de café se enfría por la misma ley que apagará el Sol.</p>
+        </div>
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Física de semiconductores</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="I=I_0\left(e^{V/nV_T}-1\right)"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">Dopar silicio cambia el mundo: de los diodos y transistores nace toda la computación moderna.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: un chip actual integra miles de millones de transistores.</p>
+        </div>
+        <div class="reveal glass group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-[0_0_40px_rgba(34,211,238,0.15)]">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-400/10 text-rose-300"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4-4"/><path d="M12 3v2"/></svg></div>
+          <h3 class="font-display mt-4 text-lg font-semibold text-white">Mecánica clásica</h3>
+          <div class="mt-2 text-sm text-cyan-200/90" data-tex="\mathbf{F}=m\mathbf{a}"></div>
+          <p class="mt-3 text-sm leading-relaxed text-slate-400">El punto de partida: fuerzas, masa y movimiento. Sigue lanzando satélites y frenando coches con precisión brutal.</p>
+          <p class="mt-4 text-xs text-amber-200/90">✦ Dato: Newton publicó sus leyes en 1687 y aún diseñan puentes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MAXWELL ============ -->
+    <section id="maxwell" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">02 · Electromagnetismo</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Las ecuaciones de Maxwell, en vivo</h2>
+        <p class="mt-3 max-w-2xl text-slate-400">Cuatro ecuaciones que unifican electricidad, magnetismo y luz. Elige una y observa su fenómeno animado.</p>
+      </div>
+
+      <div id="maxTabs" class="reveal mt-10 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <button data-mode="gaussE" class="tab rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-all hover:bg-white/10">
+          <span class="block text-sm font-semibold text-white">Gauss eléctrica</span>
+          <span class="mt-1 block font-code text-[11px] text-cyan-200/80" data-tex="\nabla\cdot\mathbf{E}=\rho/\varepsilon_0"></span>
+        </button>
+        <button data-mode="gaussB" class="tab rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-all hover:bg-white/10">
+          <span class="block text-sm font-semibold text-white">Gauss magnética</span>
+          <span class="mt-1 block font-code text-[11px] text-cyan-200/80" data-tex="\nabla\cdot\mathbf{B}=0"></span>
+        </button>
+        <button data-mode="faraday" class="tab rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-all hover:bg-white/10">
+          <span class="block text-sm font-semibold text-white">Faraday</span>
+          <span class="mt-1 block font-code text-[11px] text-cyan-200/80" data-tex="\nabla\times\mathbf{E}=-\partial_t\mathbf{B}"></span>
+        </button>
+        <button data-mode="ampere" class="tab rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left transition-all hover:bg-white/10">
+          <span class="block text-sm font-semibold text-white">Ampère–Maxwell</span>
+          <span class="mt-1 block font-code text-[11px] text-cyan-200/80" data-tex="\nabla\times\mathbf{B}=\mu_0\mathbf{J}+\dots"></span>
+        </button>
+      </div>
+
+      <div class="reveal mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+        <div class="relative h-[320px] sm:h-[420px] overflow-hidden rounded-3xl border border-white/10 bg-[#060b18]">
+          <canvas id="maxCanvas" class="absolute inset-0 h-full w-full"></canvas>
+        </div>
+        <aside class="glass flex flex-col gap-4 rounded-3xl p-6">
+          <h3 id="maxTitle" class="font-display text-xl font-semibold text-white"></h3>
+          <div id="maxTex" class="overflow-x-auto rounded-xl border border-white/10 bg-black/30 p-4 text-cyan-200"></div>
+          <p id="maxDesc" class="text-sm leading-relaxed text-slate-400"></p>
+          <div>
+            <p class="font-code text-[10px] uppercase tracking-widest text-amber-300">En tu vida diaria</p>
+            <p id="maxApp" class="mt-1 text-sm text-slate-300"></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ LABORATORIO DE CAMPOS ============ -->
+    <section id="campo" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">03 · Laboratorio</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Construye tu propio campo electromagnético</h2>
+        <p class="mt-3 max-w-2xl text-slate-400">Añade cargas positivas y negativas y observa cómo el campo eléctrico se dibuja en tiempo real. Arrástralas y experimenta.</p>
+      </div>
+
+      <div class="reveal mt-10 flex flex-wrap items-center gap-3">
+        <button data-tool="pos" class="tool-btn sel rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 transition">＋ Carga positiva</button>
+        <button data-tool="neg" class="tool-btn rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 transition">− Carga negativa</button>
+        <button data-tool="erase" class="tool-btn rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80 transition">✕ Borrar</button>
+        <button id="clearBtn" class="glass rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/10 transition">↺ Reiniciar</button>
+        <span class="ml-auto hidden md:block font-code text-xs text-slate-500">clic: añadir · arrastrar: mover · doble clic: eliminar</span>
+      </div>
+
+      <div class="reveal mt-4 relative h-[380px] sm:h-[460px] cursor-crosshair overflow-hidden rounded-3xl border border-white/10 bg-[#060b18]">
+        <canvas id="fieldCanvas" class="absolute inset-0 h-full w-full"></canvas>
+      </div>
+      <div class="reveal mt-3 flex flex-wrap gap-5 font-code text-xs text-slate-500">
+        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span> carga +</span>
+        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-sky-400"></span> carga −</span>
+        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-cyan-400"></span> campo débil</span>
+        <span class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-amber-300"></span> campo intenso</span>
+      </div>
+    </section>
+
+    <!-- ============ ESPECTRO ============ -->
+    <section id="espectro" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">04 · Ondas</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Explorador del espectro electromagnético</h2>
+        <p class="mt-3 max-w-2xl text-slate-400">Desliza la frecuencia y descubre cada región: de las ondas de radio que cruzan ciudades a los rayos gamma de las supernovas.</p>
+      </div>
+
+      <div class="reveal glass mt-10 rounded-3xl p-6 sm:p-8">
+        <div class="relative mt-4">
+          <div class="h-3 rounded-full" style="background:linear-gradient(90deg,#60a5fa 0%,#60a5fa 24.9%,#38bdf8 24.9%,#38bdf8 41.5%,#fb923c 41.5%,#fb923c 48%,#ef4444 48%,#f59e0b 48.4%,#22c55e 48.7%,#3b82f6 49%,#8b5cf6 49.3%,#c084fc 49.3%,#c084fc 52.6%,#e2e8f0 52.6%,#e2e8f0 86%,#fb7185 86%,#fb7185 100%)"></div>
+          <div id="specMarker" class="absolute -top-1 h-5 w-5 -translate-x-1/2 rounded-full border-2 border-white shadow-[0_0_12px_rgba(255,255,255,.6)]" style="left:62%"></div>
+        </div>
+        <input id="specRange" type="range" min="0" max="1000" value="620" class="mt-5 w-full" aria-label="Frecuencia">
+        <div class="mt-2 flex justify-between font-code text-[10px] text-slate-500"><span>10 kHz</span><span>100 EHz</span></div>
+
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Frecuencia</p><p id="fVal" class="font-code mt-1 text-lg text-white">—</p></div>
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Longitud de onda</p><p id="lambdaVal" class="font-code mt-1 text-lg text-white">—</p></div>
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Energía del fotón</p><p id="energyVal" class="font-code mt-1 text-lg text-white">—</p></div>
+          <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Región</p><p class="mt-1 flex items-center gap-2 text-lg text-white"><span id="bandSwatch" class="inline-block h-3 w-3 rounded-full bg-cyan-400"></span><span id="bandName" class="font-display font-semibold">—</span></p></div>
+        </div>
+
+        <div class="relative mt-6 h-24 overflow-hidden rounded-xl border border-white/10 bg-black/30">
+          <canvas id="specWave" class="absolute inset-0 h-full w-full"></canvas>
+        </div>
+        <p id="bandDesc" class="mt-4 text-sm leading-relaxed text-slate-400"></p>
+      </div>
+    </section>
+
+    <!-- ============ ELECTRÓNICA ============ -->
+    <section id="electronica" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">05 · Tecnología</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Electrónica: la física hecha útil</h2>
+      </div>
+
+      <div class="reveal mt-10 grid items-center gap-6 lg:grid-cols-[380px_1fr]">
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 min-h-[220px]">
+          <img src="https://image.qwenlm.ai/public_source/08928754-b656-4bac-bef4-9015cbf2389a/1669480ec-086a-435e-ab00-ab616ff826c7.png" alt="Placa de circuito impreso con pistas brillantes" class="h-full w-full object-cover transition-transform duration-700 hover:scale-105">
+        </div>
+        <p class="text-slate-400 leading-relaxed">Cada voltio y cada ohmio de tus dispositivos obedecen leyes que puedes ver y manipular aquí mismo. Mueve los controles del circuito: la corriente, el brillo del LED y la potencia reaccionan al instante. Después, descifra una resistencia como un técnico de verdad.</p>
+      </div>
+
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="reveal glass rounded-3xl p-6 sm:p-8">
+          <h3 class="font-display text-xl font-semibold text-white">Laboratorio de la Ley de Ohm</h3>
+          <p class="mt-1 text-sm text-slate-400">Ajusta voltaje y resistencia; observa electrones y potencia.</p>
+          <svg viewBox="0 0 320 220" class="mt-5 w-full">
+            <path id="ohmPath" d="M60 40 H260 V180 H60 Z" fill="none" stroke="#334155" stroke-width="3"/>
+            <g id="dotsG"></g>
+            <rect x="46" y="88" width="28" height="46" fill="#0b1220"/>
+            <rect x="45" y="100" width="30" height="3" fill="#e2e8f0"/>
+            <rect x="52" y="111" width="16" height="6" fill="#94a3b8"/>
+            <text x="30" y="98" fill="#94a3b8" font-size="11">+</text>
+            <text x="32" y="124" fill="#94a3b8" font-size="11">−</text>
+            <text x="24" y="114" fill="#e2e8f0" font-size="12">V</text>
+            <rect x="132" y="26" width="76" height="28" fill="#0b1220"/>
+            <polyline points="135,40 141,40 146,30 152,50 158,30 164,50 170,30 176,50 182,40 205,40" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+            <text x="164" y="68" fill="#e2e8f0" font-size="12">R</text>
+            <rect x="246" y="92" width="28" height="34" fill="#0b1220"/>
+            <circle id="ledGlow" cx="260" cy="107" r="18" fill="rgba(56,189,248,.2)"/>
+            <circle id="ledCore" cx="260" cy="107" r="7" fill="#38bdf8" fill-opacity=".6" stroke="#7dd3fc" stroke-width="1.5"/>
+            <text x="276" y="112" fill="#e2e8f0" font-size="12">LED</text>
+            <text x="150" y="200" fill="#64748b" font-size="11">sentido de la corriente →</text>
+          </svg>
+          <div class="mt-5 space-y-4">
+            <div>
+              <div class="flex justify-between text-sm"><label for="ohmV" class="text-slate-300">Voltaje <span class="font-code text-cyan-300">V</span></label><span id="vOut" class="font-code text-white">12 V</span></div>
+              <input id="ohmV" type="range" min="0" max="24" step="0.5" value="12" class="mt-1 w-full">
+            </div>
+            <div>
+              <div class="flex justify-between text-sm"><label for="ohmR" class="text-slate-300">Resistencia <span class="font-code text-amber-300">R</span></label><span id="rOut" class="font-code text-white">22 Ω</span></div>
+              <input id="ohmR" type="range" min="1" max="100" step="1" value="22" class="mt-1 w-full">
+            </div>
+          </div>
+          <div class="mt-5 grid grid-cols-2 gap-4">
+            <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Corriente I = V/R</p><p id="iOut" class="font-code mt-1 text-xl text-cyan-300">—</p></div>
+            <div class="rounded-xl border border-white/10 bg-black/30 p-4"><p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Potencia P = V·I</p><p id="pOut" class="font-code mt-1 text-xl text-amber-300">—</p></div>
+          </div>
+        </div>
+
+        <div class="reveal glass rounded-3xl p-6 sm:p-8">
+          <h3 class="font-display text-xl font-semibold text-white">Código de colores de resistencias</h3>
+          <p class="mt-1 text-sm text-slate-400">Elige los colores de cada banda y lee el valor como un profesional.</p>
+          <svg viewBox="0 0 300 100" class="mt-6 w-full">
+            <line x1="0" y1="50" x2="60" y2="50" stroke="#94a3b8" stroke-width="3"/>
+            <line x1="240" y1="50" x2="300" y2="50" stroke="#94a3b8" stroke-width="3"/>
+            <rect x="60" y="34" width="180" height="32" rx="16" fill="#caa46a"/>
+            <rect id="band0" x="88" y="34" width="12" height="32" fill="#7c4a21"/>
+            <rect id="band1" x="112" y="34" width="12" height="32" fill="#111111"/>
+            <rect id="band2" x="136" y="34" width="12" height="32" fill="#ef4444"/>
+            <rect id="band3" x="186" y="34" width="12" height="32" fill="#ca8a04"/>
+          </svg>
+          <div class="mt-5 space-y-4">
+            <div><p class="mb-2 text-xs font-medium text-slate-400">Banda 1 · primer dígito</p><div id="b1row" class="flex flex-wrap gap-2"></div></div>
+            <div><p class="mb-2 text-xs font-medium text-slate-400">Banda 2 · segundo dígito</p><div id="b2row" class="flex flex-wrap gap-2"></div></div>
+            <div><p class="mb-2 text-xs font-medium text-slate-400">Banda 3 · multiplicador</p><div id="mrow" class="flex flex-wrap gap-2"></div></div>
+            <div><p class="mb-2 text-xs font-medium text-slate-400">Banda 4 · tolerancia</p><div id="trow" class="flex flex-wrap gap-2"></div></div>
+          </div>
+          <div class="mt-6 rounded-xl border border-white/10 bg-black/30 p-4">
+            <p class="font-code text-[10px] uppercase tracking-widest text-slate-500">Valor de la resistencia</p>
+            <p id="resVal" class="font-code mt-1 text-2xl text-white">—</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CURIOSIDADES ============ -->
+    <section id="curiosidades" class="mx-auto max-w-7xl scroll-mt-24 px-5 sm:px-8 lg:px-12 py-24">
+      <div class="reveal">
+        <p class="font-code text-xs tracking-[0.35em] uppercase text-cyan-300">06 · Chispas de curiosidad</p>
+        <h2 class="font-display mt-3 text-3xl sm:text-4xl font-bold text-white">Datos que encienden preguntas</h2>
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        <div class="reveal glass flex flex-col rounded-3xl p-8">
+          <h3 class="font-display text-xl font-semibold text-white">¿Sabías que…?</h3>
+          <div id="factBox" class="mt-6 min-h-[130px] text-lg leading-relaxed text-slate-200 transition-opacity duration-500"></div>
+          <div class="mt-auto flex items-center justify-between pt-6">
+            <button id="factPrev" aria-label="Anterior" class="glass h-10 w-10 rounded-full text-white hover:bg-white/10 transition">←</button>
+            <div id="factDots" class="flex gap-2"></div>
+            <button id="factNext" aria-label="Siguiente" class="glass h-10 w-10 rounded-full text-white hover:bg-white/10 transition">→</button>
+          </div>
+        </div>
+
+        <div class="reveal glass rounded-3xl p-8">
+          <h3 class="font-display text-xl font-semibold text-white">Pon a prueba tu curiosidad</h3>
+          <div id="quiz" class="mt-6"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="relative z-10 border-t border-white/10 py-10">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 sm:flex-row sm:px-8 lg:px-12">
+      <div class="flex items-center gap-2.5">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 12c2.5-6 5-6 7.5 0s5 6 7.5 0 2.5-6 5-6" stroke="#22d3ee" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="font-display font-semibold text-white">fluxo</span>
+      </div>
+      <p class="font-code text-xs text-slate-500">∇·E = ρ/ε₀ · hecho con curiosidad — 2025</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
